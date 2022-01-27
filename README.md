@@ -1,92 +1,110 @@
-# kptl-quant-challenge
+# KPTL Quant Challenge
+
+Há 15 anos, a [KPTL](https://kptl.com.br/fundo-bohr2/) investe em empresas inovadoras. Com o lançamento de nossos Fundos Quantitativos, passamos a usar tecnologia também na gestão de ativos. Nossos modelos matemáticos, aliados a Big Data conjuntamente com técnicas de Machine Learning amplificam nossos resultados.
 
 
+## O Desafio
 
-## Getting started
+Nosso primeiro desafio é destinado aqueles que sonham em trabalhar no mundo quantitativo, aliando a competitividade do mercado financeiro à tecnologia de ponta, utilizando computação em nuvem e Big Data. 
 
-To make it easy for you to get started with GitLab, here's a list of recommended next steps.
+Nesse primeiro Challenge, decidimos iniciar com a abertura de duas vagas: uma para dados e outra para modelagem. Basta resolver os desafios abaixo, e enviar para os emails: adriano.soares@kptl.com.br e gustavo.vieira@kptl.com.br, com o títutlo `KPTL Quant Challenge`.
 
-Already a pro? Just edit this README.md and make it your own. Want to make it easy? [Use the template at the bottom](#editing-this-readme)!
+### Vaga para o time de Dados
 
-## Add your files
+O time de dados é a estrutura chave para auxiliar e prover o combustível para os modelos. Se você deseja aventurar-se no mundo da estruturação de dados, dos serviços de computação em nuvem da AWS e criar pipelines de ETL de forma escalável e sustentável para Big Data, seu lugar é aqui!
 
-- [ ] [Create](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#create-a-file) or [upload](https://docs.gitlab.com/ee/user/project/repository/web_editor.html#upload-a-file) files
-- [ ] [Add files using the command line](https://docs.gitlab.com/ee/gitlab-basics/add-file.html#add-a-file-using-the-command-line) or push an existing Git repository with the following command:
+### Vaga para o time de Modelagem
 
+O time de modelagem tem em seu núcleo o apreço pela criativade e aprendizagem, pois além de engenheiros, somos pesquisadores. Esta vaga é dedicada aos amantes de matemática e estatística, com entendimento prévio e noções de todo pipeline de criação de modelos de Machine Learning, desde uma análise profunda dos dados até a exibição de métricas de performance do modelo. Se pretende atuar sempre em alta performance, estudar algoritmos state of art, aplicando isso no mercado de cripto 24/7, seu lugar é aqui.
+
+## Remuneração e Oportunidades
+
+Buscamos pessoas que queiram trabalhar conosco e com possibilidade de se tornarem sócios futuramente. Cobramos e valorizamos dedicação e resiliência. As vagas são preferencialmente para estágio, horário flexível e trabalho remoto com visitas esporádicas no [escritório](https://www.google.com/maps/place/R.+Prof.+Tamandar%C3%A9+Tol%C3%AAdo,+69+-+15%C2%BA+Andar+-+Itaim+Bibi,+S%C3%A3o+Paulo+-+SP,+04532-020/@-23.5838219,-46.6767013,17z/data=!3m1!4b1!4m5!3m4!1s0x94ce575e8eb74d69:0xe15479525fe05e8c!8m2!3d-23.5838219!4d-46.6745126) de São Paulo.
+
+Remuneração básica: R$ 3000,00 + possível bônus anual (a dependender da performance).
+
+## Desafio de Dados
+
+### Webscrapping e Parsing CVM (Comissão de Valores Mobiliários).
+
+Dados de informes diários dos fundos: http://dados.cvm.gov.br/dados/FI/DOC/INF_DIARIO/DADOS/
+
+
+Dados cadastrais dos fundos:  http://dados.cvm.gov.br/dados/FI/CAD/DADOS/
+
+
+### Passo 1
+Extraia os dados da CVM salvando em um destino parametrizável, aqui é interessante sugerir qual tipo de banco de dados usar para salvar os dados "crus". Para este caso pode ser em uma pasta (com nome raw) no formato de CSV/parquet, mas que seja fácil modificar o destino (alguns exemplos de possíveis destinos: AWS S3, MongoDB, MySQL, etc…).
+
+> Dica: Como agilizar o processo de extração?
+
+### Passo 2
+1. Faça um ETL desses dados salvos em uma nova pasta (de preferência utilizando spark/pyspark) fazendo um mapping do CNPJ para o nome. 
+
+2. Crie [velas/barras OHLC](https://www.investopedia.com/terms/c/candlestick.asp) mensais e anuais para a coluna VL_QUOTA.
+
+3. Agrege as demais colunas numéricas como média ou mediana do período.
+
+Ao final deste processo os dados devem estar no seguinte esquema:
+
+```python
+DENOM_SOCIAL : fund_name: str,
+TP_FUNDO     : fund_type : str,
+CNPJ_FUNDO   : fund_cnpj: str ,
+DT_COMPTC    : timestamp: datetime ,
+VL_TOTAL     : total_wallet : float,
+VL_QUOTA     : daily_close: float,
+VL_PATRIM_LIQ: net_worth : float,
+CAPTC_DIA    : daily_fundraising : float,
+RESG_DIA     : daily_withdraw : float,
+NR_COTST     : number_shareholders : int,
+TAXA_ADM     : administration_tax: float,
+TAXA_PERFM   : performance_tax: float
 ```
-cd existing_repo
-git remote add origin https://gitlab.com/adriano.soares/kptl-quant-challenge.git
-git branch -M main
-git push -uf origin main
-```
 
-## Integrate with your tools
+onde os nomes da esquerda são antes e o da direita depois. Não se esqueça de incluir as colunas de open, high, low, close, interval (mês ou ano). a pasta destino desses dados deve ser chamada de "staging"
 
-- [ ] [Set up project integrations](https://gitlab.com/adriano.soares/kptl-quant-challenge/-/settings/integrations)
+### Passo 3
+1. Retorne um dataframe filtrando apenas os fundos que contenham "crypto" ou "cripto" em sua denominação social
+   
+2. Crie funcionalidades que calculem o retorno, desvio padrão, retorno log, dentre outras métricas de sua vontade, ao longo de um start_date, end_date.
+   
+3. Gere gráficos com pelo menos duas métricas de sua escolha para o fundo BOHR ARBITRAGE CRIPTO FIM IE.
 
-## Collaborate with your team
+> Dica: Tente abstrair as funcionalidades (POO é recomendável), sempre lembrando que o código deve funcionar para qualquer série temporal.
 
-- [ ] [Invite team members and collaborators](https://docs.gitlab.com/ee/user/project/members/)
-- [ ] [Create a new merge request](https://docs.gitlab.com/ee/user/project/merge_requests/creating_merge_requests.html)
-- [ ] [Automatically close issues from merge requests](https://docs.gitlab.com/ee/user/project/issues/managing_issues.html#closing-issues-automatically)
-- [ ] [Enable merge request approvals](https://docs.gitlab.com/ee/user/project/merge_requests/approvals/)
-- [ ] [Automatically merge when pipeline succeeds](https://docs.gitlab.com/ee/user/project/merge_requests/merge_when_pipeline_succeeds.html)
 
-## Test and Deploy
+## Desafio de Modelagem
 
-Use the built-in continuous integration in GitLab.
+### Estudo dos dados e criação de modelo de trade
 
-- [ ] [Get started with GitLab CI/CD](https://docs.gitlab.com/ee/ci/quick_start/index.html)
-- [ ] [Analyze your code for known vulnerabilities with Static Application Security Testing(SAST)](https://docs.gitlab.com/ee/user/application_security/sast/)
-- [ ] [Deploy to Kubernetes, Amazon EC2, or Amazon ECS using Auto Deploy](https://docs.gitlab.com/ee/topics/autodevops/requirements.html)
-- [ ] [Use pull-based deployments for improved Kubernetes management](https://docs.gitlab.com/ee/user/clusters/agent/)
-- [ ] [Set up protected environments](https://docs.gitlab.com/ee/ci/environments/protected_environments.html)
+Para este desafio são fornecidas 2 bases de dados:
 
-***
+1. Barras de tempo históricas (frequência de 1 hora) do preço do BTC (bitcoin).
+   
+2. Série histórica de labels para treinamento de modelos. As labels indicam que posição devemos tomar (long = 1 ou short = -1) em pontos específicos do tempo. 
+A técnica para gerar estas labels está no [link](https://ai.plainenglish.io/start-using-better-labels-for-financial-machine-learning-6eeac691e660).
 
-# Editing this README
+Recomenda-se fazer todo o passo a passo em um jupyter notebook, collab, etc... Para posterior apresentação dos resultados.
 
-When you're ready to make this README your own, just edit this file and use the handy template below (or feel free to structure it however you want - this is just a starting point!).  Thank you to [makeareadme.com](https://www.makeareadme.com/) for this template.
+## Passo 1
 
-## Suggestions for a good README
-Every project is different, so consider which of these sections apply to yours. The sections used in the template are suggestions for most open source projects. Also keep in mind that while a README can be too long and detailed, too long is better than too short. If you think your README is too long, consider utilizing another form of documentation rather than cutting out information.
+Faça a limpeza, normalização e extração de features (recomendamos a utilização de indicadores de trading como features). 
 
-## Name
-Choose a self-explaining name for your project.
+Obs: Considere utilizar features alternativas às propostas.
 
-## Description
-Let people know what your project can do specifically. Provide context and add a link to any reference visitors might be unfamiliar with. A list of Features or a Background subsection can also be added here. If there are alternatives to your project, this is a good place to list differentiating factors.
+O target utilizado para o modelo será a coluna side no arquivo `side_labels.csv`. Os targets foram criados utilizando os conceitos descritos no artigo disponibilizado acima. A Figura abaixo representa de forma ilustrativa o box labeling. O dataset `btc.csv` foi fornecido para extração de mais features para o modelo.
 
-## Badges
-On some READMEs, you may see small images that convey metadata, such as whether or not all the tests are passing for the project. You can use Shields to add some to your README. Many services also have instructions for adding a badge.
+![](modeling_img.png)
 
-## Visuals
-Depending on what you are making, it can be a good idea to include screenshots or even a video (you'll frequently see GIFs rather than actual videos). Tools like ttygif can help, but check out Asciinema for a more sophisticated method.
 
-## Installation
-Within a particular ecosystem, there may be a common way of installing things, such as using Yarn, NuGet, or Homebrew. However, consider the possibility that whoever is reading your README is a novice and would like more guidance. Listing specific steps helps remove ambiguity and gets people to using your project as quickly as possible. If it only runs in a specific context like a particular programming language version or operating system or has dependencies that have to be installed manually, also add a Requirements subsection.
+## Passo 2
 
-## Usage
-Use examples liberally, and show the expected output if you can. It's helpful to have inline the smallest example of usage that you can demonstrate, while providing links to more sophisticated examples if they are too long to reasonably include in the README.
+Seleção de um ou mais modelos para predição do alvo. Faça uma breve descrição do motivo da utilização do(s) modelo(s) selecionado(s), e das métricas utilizadas no treinamento e validação.
 
-## Support
-Tell people where they can go to for help. It can be any combination of an issue tracker, a chat room, an email address, etc.
+## Passo 3
 
-## Roadmap
-If you have ideas for releases in the future, it is a good idea to list them in the README.
+Apresente pelo menos duas métricas, com seus respectivos gráficos. Quanto mais detalhada a explicação e a organização do código, melhor! 
 
-## Contributing
-State if you are open to contributions and what your requirements are for accepting them.
 
-For people who want to make changes to your project, it's helpful to have some documentation on how to get started. Perhaps there is a script that they should run or some environment variables that they need to set. Make these steps explicit. These instructions could also be useful to your future self.
-
-You can also document commands to lint the code or run tests. These steps help to ensure high code quality and reduce the likelihood that the changes inadvertently break something. Having instructions for running tests is especially helpful if it requires external setup, such as starting a Selenium server for testing in a browser.
-
-## Authors and acknowledgment
-Show your appreciation to those who have contributed to the project.
-
-## License
-For open source projects, say how it is licensed.
-
-## Project status
-If you have run out of energy or time for your project, put a note at the top of the README saying that development has slowed down or stopped completely. Someone may choose to fork your project or volunteer to step in as a maintainer or owner, allowing your project to keep going. You can also make an explicit request for maintainers.
+# Boa Sorte!
