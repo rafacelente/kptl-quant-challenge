@@ -7,7 +7,7 @@ Há 15 anos, a [KPTL](https://kptl.com.br/fundo-bohr2/) investe em empresas inov
 
 Nosso primeiro desafio é destinado aqueles que sonham em trabalhar no mundo quantitativo, aliando a competitividade do mercado financeiro à tecnologia de ponta, utilizando computação em nuvem e Big Data. 
 
-Nesse primeiro Challenge, decidimos iniciar com a abertura de duas vagas: uma para dados e outra para modelagem. Basta resolver os desafios abaixo, e enviar para os emails: adriano.soares@kptl.com.br e gustavo.vieira@kptl.com.br, com o títutlo `KPTL Quant Challenge`.
+Nesse primeiro Challenge, decidimos iniciar com a abertura de duas vagas: uma para dados e outra para modelagem. Basta resolver os desafios abaixo, e enviar o link do repositório com o código para os emails: adriano.soares@kptl.com.br e gustavo.vieira@kptl.com.br, com o títutlo `KPTL Quant Challenge`.
 
 ### Vaga para o time de Dados
 
